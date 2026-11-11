@@ -5,6 +5,8 @@ import { authOptions } from "@/lib/auth";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
 
+export const maxDuration = 60;
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
@@ -37,7 +39,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-3.5-flash-lite",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
 
   const prompt = `You are an expert YouTube content strategist specializing in Shorts, Reels, and TikTok repurposing.
 
